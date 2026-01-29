@@ -1,0 +1,33 @@
+<!-- File: base.html-->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 1/27/2026 -->
+<!-- Description: base HTML page to be used as template for other HTML pages -->
+<!-- quotes/templates/quotes/base.html -->
+
+{% load static %}
+<html>
+    <head>
+        <title>Quotes Application</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    </head>
+    <body>
+        <h1>Steve Jobs Quote of the Day</h1>
+        <nav>
+            <ul>
+               <li><a href="{% url 'quote_page' %}">Quote</a></li>
+                <li><a href="{% url 'show_all_page' %}">Show All</a></li>
+                <li><a href="{% url 'about_page' %}">About</a></li> 
+            </ul>
+            
+        </nav>
+        <!-- put page specific content here -->
+        <div id="content-container">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <footer>
+            Page created by yashkedi@bu.edu.
+            Generated at {{time}}.
+        </footer>
+    </body>
+
+</html>

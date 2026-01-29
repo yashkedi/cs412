@@ -1,0 +1,18 @@
+<!-- File: show_all.html-->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 1/27/2026 -->
+<!-- Description: = HTML page for all the quotes view -->
+<!-- quotes/templates/quotes/show_all.html -->
+
+
+{% extends 'quotes/base.html' %}
+{% block content %}
+    <h2>All Steve Jobs Quotes</h2>
+    {% for quote in quotes %}
+        <p>{{ quote }}</p>
+    {% endfor %}
+    
+    <h2>All Steve Jobs Pictures</h2>
+    {% for image in images %}
+        <img src="{{ image }}" alt="Steve Jobs">
+    {% endfor %}
+{% endblock %}
