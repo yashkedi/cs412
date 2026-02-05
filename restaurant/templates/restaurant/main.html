@@ -1,0 +1,16 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 02/03/2026 -->
+<!-- Description:  HTML page for main view -->
+
+<!-- restaurant/templates/restaurant/main.html -->
+
+{% extends 'restaurant/base.html' %}
+{% load static %}
+    {% block content %}
+    <h2>Welcome !!</h2>
+    <img src="https://production.owner-pluto.net/images/funnel/images/c9cbb67d-d8fb-4edd-a9f9-d8ab7fc1941f?w=768&h=768&fit=cover" alt="Hen Chicken Rice Restaurant">
+    <ul>
+        <li><p>Name: Hen Chicken Rice</p></li>
+        <li><p>Address: 24 Union Square, Somerville, MA 02143</p></li>
+        <li><p>Hours: Everyday 11 AM - 9 PM</p></li>
+    </ul>
+    {% endblock %}

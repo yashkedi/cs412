@@ -1,0 +1,69 @@
+<!-- Author: Yash Kedia, 05/02/2026 -->
+<!-- Description:  HTML page for order view -->
+
+<!-- restaurant/templates/restaurant/order.html -->
+{% extends 'restaurant/base.html' %}
+{% load static %}
+    {% block content %}
+        <h2>Place an Order</h2>
+
+        <form action="{% url 'confirmation_page' %}" method="POST">
+            {% csrf_token %}
+            <div id="form-content">
+                <h3>Select your entree:</h3>
+                <input type="checkbox" name="entree" value="The Crispy $13" id="entree1">
+                <label for="entree1">The Crispy $13</label><br>
+                <div style="margin-left: 20px;">                 
+                    <input type="checkbox" name="entree" value="Sub Shrimp $2" id="sub-shrimp" disabled>
+                    <label for="sub-shrimp">Sub Shrimp $2</label><br>
+                </div>
+                <input type="checkbox" name="entree" value="The Mix $15" id="entree2">
+                <label for="entree2">The Mix $15</label><br>
+                <input type="checkbox" name="entree" value="The Original $14" id="entree3">
+                <label for="entree3">The Original $14</label><br>
+                <input type="checkbox" name="entree" value="The Heat $16" id="entree4">
+                <label for="entree4">The Heat $16</label><br><br>
+
+
+                <h2>Today's special:</h2>
+                <input type="checkbox" id="special" name="special" id="special">
+                <label for="special">{{special}}</label><br>
+
+                <h2>Special Instructions:</h2>
+                <label for="instructions">Please share any special instructions:</label><br><br>
+                <input type="text" id="instructions" name="instructions"><br><br>
+
+                <div id="customer-info">
+                    <h2>Customer information:</h2>
+                    <label for="customer-name">Name:</label>
+                    <input type="text" id="customer-name" name="customer-name" required><br>
+
+                    <label for="customer-phone">Phone:</label>
+                    <input type="text" id="customer-phone" name="customer-phone" required><br>
+
+                    <label for="customer-email">Email:</label>
+                    <input type="text" id="customer-email" name="customer-email" required><br> 
+                </div>
+                
+                <h2>Place your order:</h2>
+                <input type="submit">
+            </div>
+            
+        </form>
+
+         <script>
+            // Disables sub steak if chicken burrito is not selected
+            const theCrispy = document.getElementById('entree1');
+            const subShrimp = document.getElementById('sub-shrimp');
+
+            theCrispy.addEventListener('change', function() {
+                if (this.checked) {
+                    subShrimp.disabled = false;
+                } else {
+                    subShrimp.disabled = true;
+                    subShrimp.checked = false;
+                }
+            });
+        </script>
+    
+    {% endblock %}

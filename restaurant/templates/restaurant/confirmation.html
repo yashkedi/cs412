@@ -1,0 +1,26 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 09/16/2025 -->
+<!-- Description:  HTML page for order view -->
+
+<!-- restaurant/templates/restaurant/confirmation.html -->
+
+{% extends 'restaurant/base.html' %}
+{% load static %}
+    {% block content %}
+      <h2>Thank you for ordering!</h2>
+    <p>Your order will be ready at {{future_time}}</p>
+
+    <div id="order-confirmation">
+       <h3>Your order is confirmed:</h3>
+        <p>{{selected_entrees}}</p>
+
+        <h3>Special instructions:</h3>
+        <p>{{instructions}}</p>
+        <p><strong>Total:</strong> ${{total}}</p>
+
+        <h3>Customer Information</h3>
+        <p>Name: {{name}}</p>
+        <p>Phone: {{phone}}</p>
+        <p>Email: {{email}}</p> 
+    </div>
+       
+    {% endblock %}

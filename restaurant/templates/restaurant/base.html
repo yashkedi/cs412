@@ -1,0 +1,31 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 02/03/2026 -->
+<!-- Description: base HTML page to be used as template for other HTML pages -->
+
+<!-- restaurant/templates/restaurant/base.html -->
+
+ {% load static %}
+
+ <html>
+    <head>
+        <title>Restaurant Application</title>
+        <link rel="stylesheet" href="{% static 'styles_r.css' %}">
+    </head>
+    <body>
+        <h1>Hen Chicken Rice</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'main_page' %}">Main Page</a></li>
+                <li><a href="{% url 'order_page' %}">Order Page</a></li>
+            </ul>
+        </nav>
+        <!-- put page specific content here -->
+        <div id="content-container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+    <footer>
+        Page created by yashkedi@bu.edu.
+        Generated at {{time}}.
+    </footer>
+ </html>

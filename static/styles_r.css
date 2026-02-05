@@ -1,0 +1,344 @@
+/* 
+   Author: Yash Kedia (yashkedi@bu.edu), 1/29/2026
+   File: static/styles_r.css 
+   Restaurant App
+*/
+
+/* ===== Reset / Base ===== */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f7fafc;
+    color: #1f2937;
+
+    /* keep footer at bottom without overlap */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* ===== Header ===== */
+h1 {
+    background-color: #0f766e;
+    color: #ffffff;
+    text-align: center;
+    padding: 28px 16px;
+    margin: 0;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+}
+
+/* ===== Nav ===== */
+nav {
+    background-color: #115e59;
+    padding: 14px 10px;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 700;
+
+    padding: 10px 14px;
+    border-radius: 999px;
+    transition: opacity 0.2s ease, background 0.2s ease, transform 0.05s ease;
+}
+
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+nav ul li a:active {
+    transform: translateY(1px);
+}
+
+/* ===== Main Content Card ===== */
+#content-container {
+    flex: 1;
+    width: calc(100% - 48px);
+    max-width: 920px;
+
+    margin: 26px auto;
+    padding: 34px 34px 28px 34px;
+
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0px 10px 26px rgba(0, 0, 0, 0.08);
+
+    /* Default: pages look like the sample */
+    text-align: center;
+    overflow-y: auto;
+}
+
+/* Headings */
+h2 {
+    color: #0f766e;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: 800;
+}
+
+#content-container > h2 {
+    font-size: 34px;
+    margin: 8px 0 26px 0;
+}
+
+/* Subheadings */
+h3 {
+    color: #1f2937;
+    margin: 18px 0 10px 0;
+    font-weight: 800;
+}
+
+/* Text */
+p {
+    font-size: 18px;
+    line-height: 28px;
+    margin: 14px 0;
+}
+
+/* Links */
+a {
+    color: #0ea5e9;
+}
+a:hover {
+    opacity: 0.85;
+}
+
+/* ===== Main Page Image ===== */
+img {
+    width: 340px;
+    height: 340px;
+    object-fit: cover;
+    margin: 12px auto;
+
+    border-radius: 24px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.12);
+    display: block;
+}
+
+/* Main page list: no bullets */
+#content-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 18px auto 0 auto;
+    max-width: 640px;
+}
+
+#content-container ul li {
+    list-style: none;
+    margin: 10px 0;
+}
+
+/* Optional: make main page info look neat */
+#content-container ul li p {
+    margin: 6px 0;
+}
+
+/* ===== Order Page Form ===== */
+form {
+    display: block;
+}
+
+/* Keep form content aligned like the sample */
+#form-content {
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0;
+}
+
+/* Section headings inside form */
+#form-content h2,
+#form-content h3 {
+    text-align: left;
+    font-weight: 800;
+    margin: 26px 0 12px 0;
+}
+
+/* Checkbox alignment */
+#form-content input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 10px;
+    margin-left: 0;
+    transform: translateY(-1px);
+}
+
+#form-content label {
+    font-size: 16px;
+    font-weight: 650;
+    color: #1f2937;
+    vertical-align: middle;
+}
+
+
+/* Add a small label automatically */
+#form-content div[style*="margin-left: 20px"]::before {
+    content: "Protein upgrade:";
+    display: block;
+    margin-bottom: 6px;
+    color: #374151;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+/* Inputs: your HTML uses type="textbox", so style by id */
+#instructions,
+#customer-name,
+#customer-phone,
+#customer-email {
+    width: 100%;
+    max-width: 520px;
+    height: 44px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+
+    border: 1px solid rgba(31, 41, 55, 0.22);
+    border-radius: 10px;
+    background: #ffffff;
+
+    font-size: 16px;
+    color: #111827;
+
+    outline: none;
+}
+
+/* Focus with teal */
+#instructions:focus,
+#customer-name:focus,
+#customer-phone:focus,
+#customer-email:focus {
+    border-color: rgba(15, 118, 110, 0.55);
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
+
+/* Customer info section: align labels above inputs */
+#customer-info {
+    margin-top: 24px;
+    padding: 0;
+}
+
+#customer-info label {
+    display: block;
+    margin: 0 0 6px 0;
+    font-weight: 800;
+    color: #111827;
+}
+
+/* Submit button: wide and centered like the sample */
+#form-content input[type="submit"] {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    height: 46px;
+
+    margin: 10px auto 6px auto;
+    border: none;
+    border-radius: 8px;
+
+    background: #0f766e;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+
+    transition: opacity 0.2s ease, transform 0.05s ease;
+}
+
+#form-content input[type="submit"]:hover {
+    opacity: 0.92;
+}
+
+#form-content input[type="submit"]:active {
+    transform: translateY(1px);
+}
+
+
+/* ===== Confirmation Page ===== */
+#order-confirmation {
+    max-width: 520px;
+    margin: 18px auto 0 auto;
+    text-align: left;
+
+    padding: 18px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 118, 110, 0.18);
+    border-radius: 14px;
+}
+
+#order-confirmation h3 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+#order-confirmation p {
+    margin: 10px 0;
+}
+
+#order-confirmation strong {
+    color: #0f766e;
+    font-size: 18px;
+}
+
+/* ===== Footer ===== */
+footer {
+    background-color: #0f766e;
+    color: #ffffff;
+    text-align: center;
+    padding: 18px 10px;
+    margin: 0;
+}
+
+/* ===== Responsive ===== */
+@media screen and (max-width: 750px) {
+    #content-container {
+        width: calc(100% - 24px);
+        padding: 22px 18px;
+        margin: 16px auto;
+    }
+
+    #content-container > h2 {
+        font-size: 28px;
+    }
+
+    img {
+        width: 85vw;
+        height: 85vw;
+        max-width: 340px;
+        max-height: 340px;
+    }
+
+    #form-content input[type="submit"] {
+        max-width: 100%;
+    }
+}
