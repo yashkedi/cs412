@@ -1,0 +1,25 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 02/12/2026 -->
+<!-- Description: HTML page to be used as for showing one profile -->
+
+{% extends 'mini_insta/base.html' %}
+<!-- this displays a single Profile. -->
+
+{% block content %}
+<div id="view-height">
+
+        <div id="insta-bio">
+            <div id="insta-bio-name">
+                <h2>{{profile.username}}</h2>
+                <h3>{{profile.display_name}}</h3>
+                <h3>{{profile.bio_text}}</h3>
+                <h3>Joined: {{profile.join_date}}</h3>
+                <h3>Followers: 0</a></h3>
+                <h3>Following: 0</h3>
+            </div>
+            <div id="insta-bio-image">
+                <img src="{{profile.profile_image_url}}">
+            </div>
+        </div>
+    
+</div>
+{% endblock %}

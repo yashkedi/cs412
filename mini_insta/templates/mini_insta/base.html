@@ -1,0 +1,21 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/12/26 -->
+<!-- Description: base HTML page to be used as template for other HTML pages -->
+
+{% load static %}
+<html>
+    <head>
+        <title>Mini Insta</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'mini_insta.css' %}">
+    </head>
+    <body>
+        <h1>Mini Insta</h1>
+        <div id="content-container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+    <footer>
+      <p><a href="{% url 'show_all_profiles' %}">View All Profiles</a></p>
+      <p>Copyright 2025 Yash Kedia</p>
+    </footer>
+</html>
