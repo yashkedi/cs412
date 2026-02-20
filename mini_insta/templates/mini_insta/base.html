@@ -13,9 +13,12 @@
             {% block content %}
             {% endblock %}
         </div>
+        <footer>
+            {% if profile %}
+            <p><a href="{% url 'create_post' profile.pk %}">Create Post</a></p>
+            {% endif %}
+            <p><a href="{% url 'show_all_profiles' %}">View All Profiles</a></p>
+            <p>Copyright 2025 Yash Kedia</p>
+        </footer>
     </body>
-    <footer>
-      <p><a href="{% url 'show_all_profiles' %}">View All Profiles</a></p>
-      <p>Copyright 2025 Yash Kedia</p>
-    </footer>
 </html>

@@ -19,6 +19,19 @@
             <div id="insta-bio-image">
                 <img src="{{profile.profile_image_url}}">
             </div>
+            <div id="profile-posts">
+                {% for post in profile.get_all_posts %}
+                <a href="{% url 'show_post' post.pk %}">
+                    {% with photos=post.get_all_photos %}
+                        {% if photos %}
+                            <img src="{{ photos.first.image_url }}" alt="post image">
+                        {% else %}
+                            <img src="https://nftcalendar.io/storage/uploads/2022/02/21/image-not-found_0221202211372462137974b6c1a.png" alt="no image">
+                        {% endif %}
+                    {% endwith %}
+                </a>
+                {% endfor %}
+            </div>
         </div>
     
 </div>

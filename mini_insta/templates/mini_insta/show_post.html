@@ -1,0 +1,21 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/19/26 -->
+<!-- Description: HTML page to be used as for showing one post -->
+
+{% extends 'mini_insta/base.html' %}
+<!-- displays a single Post. -->
+
+{% block content %}
+<div id="post-detail">
+    <h2>{{ post.profile }}</h2>
+    <p>{{ post.timestamp }}</p>
+    <p>{{ post.caption }}</p>
+
+    <div id="post-photos">
+        {% for photo in post.get_all_photos %}
+            <img src="{{ photo.image_url }}" alt="post photo">
+        {% empty %}
+            <img src="https://nftcalendar.io/storage/uploads/2022/02/21/image-not-found_0221202211372462137974b6c1a.png" alt="no image">
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,42 +1,52 @@
 /* mini_insta.css */
-/* Author: Shrey Jain (shreyj@bu.edu), 2/9/26 */
+/* Author: Yash Kedia (yashkedi@bu.edu), 2/9/26 */
 /* Description: CSS styling for Mini Insta application */
-*{
+
+/* Global reset:
+   - box-sizing helps padding/borders not break widths
+   - remove default margins/padding so layout is consistent */
+* {
     box-sizing: border-box;
-    margin: 0 auto;
+    margin: 0;              
+    padding: 0;
 }
+
+/* Make the page height behave normally for fixed header/footer spacing */
 html, body {
     height: 100%;
 }
 
+/* Base page styling + leave room for fixed header and footer */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
 
-    /* background color */
+    /* Light Instagram-like background */
     background-color: #fafafa;
     color: #262626;
 
-    /* base padding + space for fixed header/footer */
+    /* Padding:
+       top/bottom are larger so content doesn't go under fixed header/footer */
     padding: 20px;
     padding-top: 120px;
     padding-bottom: 120px;
 }
 
-/* FIXED HEADER */
+/* Fixed site header (the big "Mini Insta" title at the top) */
 h1 {
     text-align: center;
     background-color: white;
     padding: 18px 20px;
     border: 1px solid #dbdbdb;
     border-radius: 12px;
+
+    /* Small shadow so it looks like a card */
     box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 
-    /* Instagram gradient accent */
+    /* Add an Instagram-style gradient accent on top */
     border-top: 3px solid transparent;
     border-image: linear-gradient(90deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5) 1;
 
-    /* fixed positioning */
+    /* Keep header pinned to top */
     position: fixed;
     top: 10px;
     left: 20px;
@@ -44,12 +54,13 @@ h1 {
     z-index: 1000;
 }
 
+/* Main page container: keeps content from stretching too wide */
 #content-container {
     max-width: 1000px;
     margin: 0 auto;
 }
 
-/* FIXED FOOTER */
+/* Fixed footer: stays on screen at the bottom */
 footer {
     text-align: center;
     padding: 12px;
@@ -59,22 +70,36 @@ footer {
     box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     color: #8e8e8e;
 
+    /* Keep footer pinned to bottom */
     position: fixed;
     bottom: 10px;
     left: 20px;
     right: 20px;
     z-index: 1000;
-
-    margin-top: 0;
 }
 
-/* Profile list page */
+/* Footer links styling */
+footer a {
+    text-decoration: none;
+    color: #4f5bd5;
+}
+
+footer a:hover {
+    color: #0095f6;
+}
+
+/* ---------------------------
+   Profile list page (grid)
+   --------------------------- */
+
+/* 3-column grid for the profiles page */
 #instagram-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
+/* Each profile card */
 #insta-profile {
     background-color: white;
     border: 1px solid #dbdbdb;
@@ -82,27 +107,33 @@ footer {
     text-align: center;
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+
+    /* small hover animation */
     transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
+/* Slight lift on hover */
 #insta-profile:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 26px rgba(0,0,0,0.09);
 }
 
-/* “Story ring” style around profile images */
+/* Profile picture ring effect (like Instagram story ring) */
 #insta-container-image img {
     width: 150px;
     height: 150px;
     border-radius: 50%;
 
+    /* ring effect */
     padding: 4px;
     background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
-
     border: 3px solid white;
-    box-sizing: border-box;
+
+    /* keeps the image from stretching */
+    object-fit: cover;
 }
 
+/* Profile name links */
 #insta-container-name a {
     text-decoration: none;
     color: #262626;
@@ -113,47 +144,159 @@ footer {
 }
 
 #insta-container-name h2 {
-    margin: 10px 0;
+    margin-top: 10px;
 }
 
 #insta-container-name h3 {
-    margin: 5px 0;
+    margin-top: 6px;
     color: #8e8e8e;
     font-weight: normal;
 }
 
-/* Single profile page */
+/* ---------------------------
+   Single profile page layout
+   --------------------------- */
+
+/* Bio section: two columns (text on left, profile image on right) */
 #insta-bio {
-    display: flex;
-    gap: 40px;
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 30px;
     padding: 30px;
+
     background-color: white;
     border: 1px solid #dbdbdb;
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+
+    /* align items to top so text starts at same height */
+    align-items: start;
 }
 
+/* Bigger profile image on profile page */
 #insta-bio-image img {
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
 
+    /* ring effect */
     padding: 5px;
     background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
-
     border: 4px solid white;
-    box-sizing: border-box;
+
+    object-fit: cover;
 }
 
+/* Bio text spacing */
 #insta-bio-name h2 {
-    margin: 10px 0;
+    margin-bottom: 10px;
 }
 
 #insta-bio-name h3 {
-    margin: 8px 0;
+    margin-top: 8px;
     font-weight: normal;
     color: #8e8e8e;
 }
 
+/* Posts thumbnails grid under the profile bio */
+#profile-posts {
+    /* span full width if it’s inside a grid container */
+    grid-column: 1 / -1;
+    margin-top: 20px;
 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
 
+/* Make post images look like Instagram thumbnails */
+#profile-posts img {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
+    border: 1px solid #dbdbdb;
+
+    /* crop nicely instead of stretching */
+    object-fit: cover;
+    display: block;
+}
+
+/* ---------------------------
+   Post detail page
+   --------------------------- */
+
+/* Post page container card */
+#post-detail {
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+/* Grid for multiple photos on one post */
+#post-photos {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+/* Post detail images */
+#post-photos img {
+    width: 100%;
+    height: 320px;
+    border-radius: 12px;
+    border: 1px solid #dbdbdb;
+    object-fit: cover;
+    display: block;
+}
+
+/* ---------------------------
+   Create post form page
+   --------------------------- */
+
+/* Make the form look like a centered card */
+#create-post-form {
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+
+    /* keep form from being too wide */
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* Stretch form fields nicely */
+#create-post-form table {
+    width: 100%;
+    margin-top: 12px;
+}
+
+/* Inputs/textarea styling */
+#create-post-form input[type="text"],
+#create-post-form input[type="url"],
+#create-post-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dbdbdb;
+    border-radius: 10px;
+}
+
+/* Buttons */
+#create-post-form input[type="submit"],
+#create-post-form button {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #dbdbdb;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* Button hover */
+#create-post-form input[type="submit"]:hover,
+#create-post-form button:hover {
+    border-color: #0095f6;
+}
