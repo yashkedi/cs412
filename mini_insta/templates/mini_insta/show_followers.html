@@ -1,0 +1,20 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/28/26 -->
+<!-- Description: HTML page used to show the full follower list -->
+
+<!-- Template path: mini_insta/templates/mini_insta/show_followers.html -->
+{% extends 'mini_insta/base.html' %}
+<h2>Showing all followers</h2>
+
+{% block content %}
+
+    {% if followers %}
+        <ul>
+        {% for profile in followers %}
+            <li><a href="{% url 'show_profile' profile.pk %}">{{ profile.display_name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No followers yet.</p>
+    {% endif %}
+
+{% endblock %}

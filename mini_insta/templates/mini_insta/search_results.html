@@ -1,0 +1,45 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/28/26 -->
+<!-- Description: page showing search results for profiles and posts -->
+<!-- Template path: mini_insta/templates/mini_insta/search_results.html -->
+
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+
+<h2>Matching Profiles</h2>
+{% if profiles %}
+    <ul>
+        {% for profile in profiles %}
+            <li>
+                <a href="{% url 'show_profile' profile.pk %}">{{ profile.username }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No profiles found.</p>
+{% endif %}
+
+<h2>Matching Posts</h2>
+{% if posts %}
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{% url 'show_post' post.pk %}">
+                    <div class="post-photos">
+                      {% if post.get_first_photo %}
+                      <img src="{{ post.get_first_photo.get_image_url }}" alt="post photo" class="search-post-img">
+                      {% else %}
+                      <img src="https://nftcalendar.io/storage/uploads/2022/02/21/image-not-found_0221202211372462137974b6c1a.png" alt="no image" class="search-post-img">
+                      {% endif %}
+                    </div>
+                    <strong>{{ post.profile.username }}</strong>: {{ post.caption }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No posts found.</p>
+{% endif %}
+{% endblock %}

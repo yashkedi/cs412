@@ -1,0 +1,60 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/28/26 -->
+<!-- Description: HTML page used to display the full feed -->
+<!-- Template path: mini_insta/templates/mini_insta/show_feed.html -->
+{% extends 'mini_insta/base.html' %}
+{% block content %}
+
+<h2>{{ profile.display_name }}'s Feed</h2>
+
+<div class="posts-container">
+
+{% for post in posts %}
+<div class="space-container">
+    <div class="profile-container">
+        <div class="profile-container-left">
+            {% if post.profile.profile_image_url %}
+            <a href="{% url 'show_profile' post.profile.pk %}"><img src="{{ post.profile.profile_image_url }}"></a>
+            {% endif %}
+        </div>
+
+        <div class="profile-container-right">
+            <a href="{% url 'show_profile' post.profile.pk %}"><strong>{{ post.profile.display_name }}</strong></a>
+        </div>
+    </div>
+    
+    <p>{{ post.timestamp }}</p>
+
+    <div id="post-photos">
+        {% if post.get_first_photo %}
+          <img src="{{ post.get_first_photo.get_image_url }}" alt="post photo" class="post-img">
+        {% else %}
+          <img src="https://ih1.redbubble.net/image.4905811472.8675/st,extra_large,507x507-pad,600x600,f8f8f8.jpg" alt="no image" class="post-img">
+        {% endif %}
+    </div>
+
+    <div class="likes">
+        {% if post.get_first_like %}
+        <p>Liked by <strong>{{ post.get_first_like.profile.username }}</strong> and {{ post.get_num_likes }} others.</p>
+        {% else %}
+        <p>No likes.</p>
+        {% endif %}
+    </div>
+
+    <div class="post-caption">
+        <p>{{ post.caption }}</p>
+    </div>
+
+    <div class="comments">
+        {% for comment in post.get_all_comments %}
+        <p><strong>{{ comment.profile.username }}</strong> {{ comment }}</p>
+        {% empty %}
+        <p>No comments yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% empty %}
+<p>No posts to show in your feed yet.</p>
+{% endfor %}
+</div>
+{% endblock %}

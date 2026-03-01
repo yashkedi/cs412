@@ -1,0 +1,20 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/28/26 -->
+<!-- Description: HTML page used to show everyone being followed -->
+
+<!-- Template path: mini_insta/templates/mini_insta/show_following.html -->
+{% extends 'mini_insta/base.html' %}
+<h2>Showing all following</h2>
+
+{% block content %}
+
+    {% if following %}
+        <ul>
+        {% for profile in following %}
+            <li><a href="{% url 'show_profile' profile.pk %}">{{ profile.display_name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Not following anyone yet.</p>
+    {% endif %}
+
+{% endblock %}

@@ -14,11 +14,20 @@
             {% endblock %}
         </div>
         <footer>
-            {% if profile %}
-            <p><a href="{% url 'create_post' profile.pk %}">Create Post</a></p>
-            {% endif %}
-            <p><a href="{% url 'show_all_profiles' %}">View All Profiles</a></p>
-            <p>Copyright 2025 Yash Kedia</p>
+        {% if profile %}
+        <a href="{% url 'show_feed' profile.pk %}">🏡</a>
+        <a href="{% url 'show_search' profile.pk %}">🔍</a>
+        <a href="{% url 'create_post' profile.pk %}">➕</a>
+        <a href="{% url 'show_profile' profile.pk %}">
+                {% if profile.profile_image_url %}
+                <img src="{{ profile.profile_image_url }}" class="footer-profile-img">
+                {% else %}
+                👤
+                {% endif %}
+        </a>
+        {% endif %}
+        <p><a href="{% url 'show_all_profiles' %}">View All Profiles</a></p>
+        <p>Copyright 2025 Yash Kedia</p>
         </footer>
     </body>
 </html>

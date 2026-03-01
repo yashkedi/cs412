@@ -6,33 +6,35 @@
 
 {% block content %}
 <div id="view-height">
-
-        <div id="insta-bio">
-            <div id="insta-bio-name">
-                <h2>{{profile.username}}</h2>
-                <h3>{{profile.display_name}}</h3>
-                <h3>{{profile.bio_text}}</h3>
-                <h3>Joined: {{profile.join_date}}</h3>
-                <h3>Followers: 0</a></h3>
-                <h3>Following: 0</h3>
-            </div>
-            <div id="insta-bio-image">
-                <img src="{{profile.profile_image_url}}">
-            </div>
-            <div id="profile-posts">
-                {% for post in profile.get_all_posts %}
-                <a href="{% url 'show_post' post.pk %}">
-                    {% with photos=post.get_all_photos %}
-                        {% if photos %}
-                            <img src="{{ photos.first.image_url }}" alt="post image">
-                        {% else %}
-                            <img src="https://nftcalendar.io/storage/uploads/2022/02/21/image-not-found_0221202211372462137974b6c1a.png" alt="no image">
-                        {% endif %}
-                    {% endwith %}
-                </a>
-                {% endfor %}
+    <div id="insta-bio">
+        <div id="insta-bio-name">
+            <h2>{{profile.username}}</h2>
+            <h3>{{profile.display_name}}</h3>
+            <h3>{{profile.bio_text}}</h3>
+            <h3>Joined: {{profile.join_date}}</h3>
+            <h3><a href="{% url 'show_followers' profile.pk %}">Followers: {{profile.get_num_followers}}</a></h3>
+            <h3><a href="{% url 'show_following' profile.pk %}">Following: {{profile.get_num_following}}</a></h3>
+            <div class="button-container">
+                <button class="update-profile-button"><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></button>
             </div>
         </div>
-    
+        <div id="insta-bio-image">
+            <img src="{{profile.profile_image_url}}" alt="profile image">
+        </div>
+    </div>
+
+    <div id="profile-posts">
+        {% for post in profile.get_all_posts %}
+        <a href="{% url 'show_post' post.pk %}">
+            {% with photos=post.get_all_photos %}
+                {% if photos %}
+                    <img src="{{ photos.first.get_image_url }}" alt="post image">
+                {% else %}
+                    <img src="https://nftcalendar.io/storage/uploads/2022/02/21/image-not-found_0221202211372462137974b6c1a.png" alt="no image">
+                {% endif %}
+            {% endwith %}
+        </a>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

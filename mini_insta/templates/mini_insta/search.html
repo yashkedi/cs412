@@ -1,0 +1,19 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/28/26 -->
+<!-- Description: HTML page for searching profiles or post objects -->
+
+<!-- Template path: mini_insta/search.html -->
+
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+<div class="search-box">
+<h2>Search</h2>
+
+<form action="{% url 'show_search' profile.pk %}" method="get">
+    Search for text, tag or people: <input type="text" name="q">
+    <button type="submit">Search</button>
+</form>
+</div>
+
+{% endblock %}
