@@ -7,4 +7,7 @@ password: QWERTY@987654
 username: chris_rock
 password: QWERTY@987654
 
+username: yash_kedia
+password: QWERTY@987654
+
 Note: Each user has a matching profile with the same name, and they all use the same password.
