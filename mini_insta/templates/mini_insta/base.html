@@ -9,21 +9,34 @@
     </head>
     <body>
         <h1>Mini Insta</h1>
+        <div id="nav">
+        {% if request.user.is_authenticated %}
+            <span class="logged-in-as">Logged in as: <strong>{{request.user}}</strong></span>
+            <a href="{% url 'show_my_profile' %}">My Profile</a>
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <span class="logged-in-as">Not logged in</span>
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+        </div>
         <div id="content-container">
             {% block content %}
             {% endblock %}
         </div>
         <footer>
-        {% if profile %}
-        <a href="{% url 'show_feed' profile.pk %}">🏡</a>
-        <a href="{% url 'show_search' profile.pk %}">🔍</a>
-        <a href="{% url 'create_post' profile.pk %}">➕</a>
-        <a href="{% url 'show_profile' profile.pk %}">
-                {% if profile.profile_image_url %}
-                <img src="{{ profile.profile_image_url }}" class="footer-profile-img">
-                {% else %}
-                👤
-                {% endif %}
+        {% if request.user.is_authenticated and request.user == profile.user %}
+        <a href="{% url 'show_feed' %}">🏡</a>
+        <a href="{% url 'show_search' %}">🔍</a>
+        <a href="{% url 'create_post' %}">➕</a>
+        <a href="{% url 'show_my_profile' %}">
+            {% if profile.profile_image_url %}
+            <img src="{{ profile.profile_image_url }}" class="footer-profile-img">
+            {% else %}
+            👤
+            {% endif %}
         </a>
         {% endif %}
         <p><a href="{% url 'show_all_profiles' %}">View All Profiles</a></p>

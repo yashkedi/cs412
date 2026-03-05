@@ -1,0 +1,10 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 3/4/26 -->
+<!-- Description: show a message when the user is logged out -->
+
+<!-- Template path: mini_insta/templates/mini_insta/logged_out.html -->
+
+{% extends 'mini_insta/base.html' %}
+{% block content %}
+<h2>You have been logged out.</h2>
+<p><a href="{% url 'login' %}">Click here to log back in</a></p>
+{% endblock %}

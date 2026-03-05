@@ -35,11 +35,13 @@
                 <p><strong>{{comment.profile.username}}</strong> {{comment}}</p>
             {% endfor %}
     </div>
+    {% if request.user.is_authenticated and request.user == post.profile.user %}
     <div id="post-delete">
         <a href="{% url 'delete_post' post.pk %}">Delete Post</a>
     </div>
     <div id="post-update">
         <a href="{% url 'update_post' post.pk %}">Update Post</a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

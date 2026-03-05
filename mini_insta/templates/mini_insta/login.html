@@ -1,0 +1,20 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 3/4/26 -->
+<!-- Description: show the login form -->
+
+<!-- Template path: mini_insta/templates/mini_insta/login.html -->
+
+{% extends 'mini_insta/base.html' %}
+{% block content %}
+<h2>Login to Mini Insta</h2>
+<form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Login">
+
+    {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{request.GET.next}}">
+    {% else %}
+    <input type="hidden" name="next" value="{% url 'show_all_profiles' %}">
+    {% endif %}
+</form>
+{% endblock %}

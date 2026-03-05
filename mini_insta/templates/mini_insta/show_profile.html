@@ -14,9 +14,11 @@
             <h3>Joined: {{profile.join_date}}</h3>
             <h3><a href="{% url 'show_followers' profile.pk %}">Followers: {{profile.get_num_followers}}</a></h3>
             <h3><a href="{% url 'show_following' profile.pk %}">Following: {{profile.get_num_following}}</a></h3>
+             {% if request.user.is_authenticated and request.user == profile.user %}
             <div class="button-container">
-                <button class="update-profile-button"><a href="{% url 'update_profile' profile.pk %}">Update Profile</a></button>
+                <button class="update-profile-button"><a href="{% url 'update_profile' %}">Update Profile</a></button>
             </div>
+            {% endif %}
         </div>
         <div id="insta-bio-image">
             <img src="{{profile.profile_image_url}}" alt="profile image">
