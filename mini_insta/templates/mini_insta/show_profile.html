@@ -14,12 +14,23 @@
             <h3>Joined: {{profile.join_date}}</h3>
             <h3><a href="{% url 'show_followers' profile.pk %}">Followers: {{profile.get_num_followers}}</a></h3>
             <h3><a href="{% url 'show_following' profile.pk %}">Following: {{profile.get_num_following}}</a></h3>
-             {% if request.user.is_authenticated and request.user == profile.user %}
+            {% if request.user.is_authenticated and request.user == profile.user %}
             <div class="button-container">
                 <button class="update-profile-button"><a href="{% url 'update_profile' %}">Update Profile</a></button>
             </div>
             {% endif %}
+
+            {% if request.user.is_authenticated and request.user != profile.user %}
+                {% with logged_in_profile=request.user.profile_set.first %}
+                    {% if logged_in_profile in profile.get_followers %}
+                        <a href="{% url 'delete_follow' profile.pk %}"><button class="update-profile-button">Unfollow</button></a>
+                    {% else %}
+                        <a href="{% url 'follow_profile' profile.pk %}"><button class="update-profile-button">Follow</button></a>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
         </div>
+
         <div id="insta-bio-image">
             <img src="{{profile.profile_image_url}}" alt="profile image">
         </div>

@@ -1,0 +1,10 @@
+username: cr7
+password: QWERTY@987654
+
+username: vk18
+password: QWERTY@987654
+
+username: chris_rock
+password: QWERTY@987654
+
+Note: Each user has a matching profile with the same name, and they all use the same password.

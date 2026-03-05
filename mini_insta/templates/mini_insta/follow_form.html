@@ -1,0 +1,16 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/28/26 -->
+<!-- Description: show the HTML form used to create a follow relationship -->
+
+<!-- Template path: mini_insta/templates/mini_insta/follow_form.html -->
+
+{% extends 'mini_insta/base.html' %}
+{% block content %}
+<h1>Follow Form</h1>
+<h2>Follow {{ profile.username }}?</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit" value="Follow">
+    <a href="{% url 'show_profile' profile.pk %}"><button type="button">Cancel</button></a>
+</form>
+{% endblock %}

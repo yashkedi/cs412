@@ -52,6 +52,9 @@ class Profile(models.Model):
         following = self.get_following()
         return Post.objects.filter(profile__in=following).order_by('-timestamp') 
     
+    def get_likes_profiles(self):
+        '''Return a list of profiles that liked this post.'''
+        return [like.profile for like in Like.objects.filter(post=self)]
 class Post(models.Model):
     '''Encapsulate the data of an insta Post.'''
 

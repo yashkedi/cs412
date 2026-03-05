@@ -3,12 +3,13 @@
 # Author: Yash Kedia (yashkedi@bu.edu), 2/12/26
 # Description: Views for mini_insta application
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import *
 from mini_insta.forms import *
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
 
 class ProfileListView(ListView):
@@ -24,12 +25,20 @@ class ProfileDetailView(DetailView):
     template_name = "mini_insta/show_profile.html"
     context_object_name = "profile" 
     
+
 class PostDetailView(DetailView):
     '''Display a single post.'''
 
     model = Post
     template_name = "mini_insta/show_post.html"
     context_object_name = "post" 
+
+    def get_context_data(self, **kwargs):
+        '''Override get_context_data to add profile to context for footer.'''
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['profile'] = Profile.objects.filter(user=self.request.user).first()
+        return context
 
 class CreatePostView(LoginRequiredMixin, CreateView):
     '''A view to handle creation of a new Post.
@@ -226,3 +235,122 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
     def get_object(self):
         '''Return the profile of the logged-in user.'''
         return Profile.objects.get(user=self.request.user)
+    
+class CreateProfileView(CreateView):
+    '''A view for handling creating a profile.'''
+    model = Profile
+    template_name = "mini_insta/create_profile_form.html"
+    fields = ['username', 'display_name', 'profile_image_url', 'bio_text']
+
+    def get_context_data(self, **kwargs):
+        ''''override the built in get_context_data to populate fields.'''
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = UserCreationForm()
+        return context
+    
+    def form_valid(self, form):
+        '''validate incoming create profile form'''
+        user_form = UserCreationForm(self.request.POST)
+        if user_form.is_valid():
+            user = user_form.save()
+            login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+            form.instance.user = user
+            return super().form_valid(form)
+        else:
+            context = self.get_context_data(form=form)
+            context['user_form'] = user_form
+            return self.render_to_response(context)
+    
+    def get_success_url(self):
+        '''redirect to the Profile's detail page'''
+        return reverse('show_my_profile')
+    
+class CreateFollowView(LoginRequiredMixin, CreateView):
+    '''A view for handling a profile following another profile.'''
+    model = Follow
+    form_class = CreateFollowForm
+    template_name = "mini_insta/follow_form.html"
+
+    def get_login_url(self):
+        '''Return the url for this app's login page.'''
+        return reverse('login')
+
+    def get_context_data(self, **kwargs):
+        '''Override the built in get_context_data to populate fields.'''
+        context = super().get_context_data(**kwargs)
+        context["profile"] = Profile.objects.get(pk=self.kwargs["pk"])
+        context["follower_profile"] = Profile.objects.get(user=self.request.user)
+        return context
+
+    def form_valid(self, form):
+        '''Set the follower and followed profiles before saving.'''
+        form.instance.profile = Profile.objects.get(pk=self.kwargs["pk"])
+        form.instance.follower_profile = Profile.objects.get(user=self.request.user)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        '''Redirect to the followed profile's detail page.'''
+        return reverse("show_profile", kwargs={"pk": self.object.profile.pk})
+
+
+class DeleteFollowView(LoginRequiredMixin, DeleteView):
+    '''A view to handle the deletion of a follow relationship.'''
+    model = Follow
+    template_name = "mini_insta/delete_follow_form.html"
+    form_class = DeleteFollowForm
+
+    def get_login_url(self):
+        '''Return the url for this app's login page.'''
+        return reverse('login')
+
+    def get_object(self, queryset=None):
+        '''Return the follow object between the current user and target profile.'''
+        profile_to_unfollow = Profile.objects.get(pk=self.kwargs["pk"])
+        follower_profile = Profile.objects.get(user=self.request.user)
+        return Follow.objects.get(profile=profile_to_unfollow, follower_profile=follower_profile)
+
+    def get_context_data(self, **kwargs):
+        '''Override the built in get_context_data to populate fields.'''
+        context = super().get_context_data(**kwargs)
+        context["profile"] = Profile.objects.get(pk=self.kwargs["pk"])
+        context["follower_profile"] = Profile.objects.get(user=self.request.user)
+        return context
+
+    def get_success_url(self):
+        '''Redirect to the unfollowed profile's detail page.'''
+        return reverse("show_profile", kwargs={"pk": self.object.profile.pk})
+
+
+class LikeDetailView(LoginRequiredMixin, CreateView):
+    '''A view to handle liking a post.'''
+    model = Like
+
+    def get_login_url(self):
+        '''Return the url for this app's login page.'''
+        return reverse('login')
+
+    def post(self, request, *args, **kwargs):
+        '''Create a like object if the user is not liking their own post.'''
+        post = Post.objects.get(pk=self.kwargs["pk"])
+        profile = Profile.objects.get(user=request.user)
+        if post.profile != profile:
+            Like.objects.get_or_create(post=post, profile=profile)
+        return redirect("show_post", pk=post.pk)
+
+
+class LikeDeleteView(LoginRequiredMixin, DeleteView):
+    '''A view to handle unliking a post.'''
+    model = Like
+
+    def get_login_url(self):
+        '''Return the url for this app's login page.'''
+        return reverse('login')
+
+    def post(self, request, *args, **kwargs):
+        '''Delete the like object if it exists.'''
+        post = Post.objects.get(pk=self.kwargs["pk"])
+        profile = Profile.objects.get(user=request.user)
+        like = Like.objects.filter(post=post, profile=profile).first()
+        if like:
+            like.delete()
+        return redirect("show_post", pk=post.pk)

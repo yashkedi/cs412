@@ -16,7 +16,21 @@
             <img src="https://nftcalendar.io/storage/uploads/2022/02/21/image-not-found_0221202211372462137974b6c1a.png" alt="no image">
         {% endfor %}
     </div>
-
+    {% if request.user.is_authenticated and request.user != post.profile.user %}
+        {% with logged_in_profile=request.user.profile_set.first %}
+            {% if logged_in_profile in post.get_likes_profiles %}
+                <form method="POST" action="{% url 'delete_like' post.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="unlike-btn">Unlike</button>
+                </form>
+            {% else %}
+                <form method="POST" action="{% url 'like_post' post.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="like-btn">🩷 Like</button>
+                </form>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
     <div id="likes">
         {% if post.get_first_like %}
             <p>Liked by

@@ -1,0 +1,15 @@
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 2/28/26 -->
+<!-- Description: show the HTML form used to delete a follow relationship -->
+
+<!-- Template path: mini_insta/templates/mini_insta/delete_follow_form.html -->
+
+{% extends 'mini_insta/base.html' %}
+{% block content %}
+<h1>Unfollow Form</h1>
+<h2>Unfollow {{ profile.username }}?</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Unfollow">
+    <a href="{% url 'show_profile' profile.pk %}"><button type="button">Cancel</button></a>
+</form>
+{% endblock %}
