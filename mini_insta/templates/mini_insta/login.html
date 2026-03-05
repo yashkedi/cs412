@@ -5,16 +5,20 @@
 
 {% extends 'mini_insta/base.html' %}
 {% block content %}
-<h2>Login to Mini Insta</h2>
-<form action="{% url 'login' %}" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit" value="Login">
+<div class="login-page">
+    <div class="login-card">
+        <h2>Login to Mini Insta</h2>
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Login">
 
-    {% if request.GET.next %}
-    <input type="hidden" name="next" value="{{request.GET.next}}">
-    {% else %}
-    <input type="hidden" name="next" value="{% url 'show_all_profiles' %}">
-    {% endif %}
-</form>
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{request.GET.next}}">
+            {% else %}
+            <input type="hidden" name="next" value="{% url 'show_all_profiles' %}">
+            {% endif %}
+        </form>
+    </div>
+</div>
 {% endblock %}

@@ -5,6 +5,14 @@
 
 {% extends 'mini_insta/base.html' %}
 {% block content %}
-<h2>You have been logged out.</h2>
-<p><a href="{% url 'login' %}">Click here to log back in</a></p>
+<div class="logout-page">
+    <div class="logout-card">
+        <h2>You have been logged out.</h2>
+        <p>Your session ended successfully.</p>
+        <div class="logout-actions">
+            <a class="logout-link primary" href="{% url 'login' %}">Log In Again</a>
+            <a class="logout-link secondary" href="{% url 'show_all_profiles' %}">View Profiles</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
