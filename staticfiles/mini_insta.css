@@ -39,6 +39,50 @@ h2 {
     padding-bottom: 95px;
 }
 
+#nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #efefef;
+    font-size: 14px;
+}
+
+#nav a {
+    text-decoration: none;
+    color: #262626;
+    font-weight: 600;
+}
+
+#nav a:hover {
+    color: #3897f0;
+}
+
+#nav form {
+    margin: 0;
+}
+
+#nav button {
+    background: none;
+    border: 1px solid #dbdbdb;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #262626;
+}
+
+#nav button:hover {
+    background-color: #fafafa;
+}
+
+#nav .logged-in-as {
+    margin-right: auto;
+    color: #8e8e8e;
+}
+
 footer {
     position: fixed;
     bottom: 0;
@@ -246,6 +290,35 @@ footer p {
     border-radius: 6px;
 }
 
+.like-btn,
+.unlike-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.like-btn {
+    background-color: #ffffff;
+    border: 1px solid #dbdbdb;
+    color: #262626;
+}
+
+.like-btn:hover {
+    background-color: #fafafa;
+}
+
+.unlike-btn {
+    background-color: #ed4956;
+    color: #ffffff;
+}
+
+.unlike-btn:hover {
+    background-color: #c0313d;
+}
+
 #post-delete,
 #post-update {
     display: inline-block;
@@ -405,6 +478,143 @@ footer p {
 
 .search-box button:hover {
     background: #1877f2;
+}
+
+.login-page {
+    max-width: 420px;
+    margin: 36px auto 0;
+}
+
+.login-card {
+    background: #ffffff;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.login-card h2 {
+    margin: 0 0 18px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.login-card p {
+    margin: 0 0 12px;
+}
+
+.login-card label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.login-card input[type="text"],
+.login-card input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #262626;
+}
+
+.login-card input[type="text"]:focus,
+.login-card input[type="password"]:focus {
+    border-color: #3897f0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(56, 151, 240, 0.15);
+}
+
+.login-card input[type="submit"] {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #0095f6;
+    color: #ffffff;
+}
+
+.login-card input[type="submit"]:hover {
+    background: #1877f2;
+}
+
+.login-card .errorlist {
+    margin: 0 0 8px;
+    padding: 8px 10px;
+    border: 1px solid #f1c0c3;
+    border-radius: 8px;
+    background: #fff0f1;
+    color: #9f2d36;
+    list-style: none;
+    font-size: 13px;
+}
+
+.logout-page {
+    max-width: 420px;
+    margin: 48px auto 0;
+}
+
+.logout-card {
+    background: #ffffff;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    padding: 26px 20px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.logout-card h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    color: #262626;
+}
+
+.logout-card p {
+    margin: 0 0 18px;
+    color: #8e8e8e;
+    font-size: 14px;
+}
+
+.logout-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.logout-link {
+    display: inline-block;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.logout-link.primary {
+    background: #0095f6;
+    color: #ffffff;
+}
+
+.logout-link.primary:hover {
+    background: #1877f2;
+}
+
+.logout-link.secondary {
+    background: #ffffff;
+    color: #262626;
+    border: 1px solid #dbdbdb;
+}
+
+.logout-link.secondary:hover {
+    background: #fafafa;
 }
 
 .search-post-img {
