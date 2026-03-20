@@ -1,0 +1,140 @@
+<!-- voter_analytics/templates/voter_analytics/results.html -->
+<!-- Yash Kedia (yashkedi@bu.edu), 3/19/26-->
+<!-- Description: template for results page of voter_analytics application -->
+{% extends 'voter_analytics/base.html' %}
+
+ 
+{% block content %}
+<h1>Search Form</h1>
+
+<form action="{% url 'voters' %}" method="GET">
+    <table>
+        <!-- party info -->
+        <tr>
+            <th>Party affiliation:</th>
+            <td>
+                <select name="party">
+                    <option value="">--Any--</option>
+                      {% for p in parties %}
+                      <option value="{{ p }}" {% if get.party == p %}selected{% endif %}>{{ p }}</option>
+                      {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- min dob -->
+        <tr>
+            <th>Min Birth Year:</th>
+            <td>
+                <select name="min_dob">
+                    <option value="">-- Any --</option>
+                    {% for y in years %}
+                    <option value="{{ y }}" {% if get.min_dob == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- max dob -->
+        <tr>
+            <th>Max Birth Year:</th>
+            <td>
+                <select name="max_dob">
+                    <option value="">-- Any --</option>
+                    {% for y in years %}
+                    <option value="{{ y }}" {% if get.max_dob == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- Voter score -->
+        <tr>
+            <th>Voter Score:</th>
+            <td>
+                <select name="voter_score">
+                    <option value="">--Any--</option>
+                      {% for s in scores %}
+                      <option value="{{ s }}" {% if get.voter_score == s|stringformat:"s" %}selected{% endif %}>{{ s }}</option>
+                      {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- voted info -->
+        <tr>
+            <th>Voted in elections:</th>
+            <td>
+                <input type="checkbox" name="v20" id="v20" {% if get.v20 %}checked{% endif %}>
+                <label for="v20">v20state</label><br>
+                <input type="checkbox" name="v21town" id="v21town" {% if get.v21town %}checked{% endif %}>
+                <label for="v21town">v21town</label><br>
+                <input type="checkbox" name="v21primary" id="v21primary" {% if get.v21primary %}checked{% endif %}>
+                <label for="v21primary">v21primary</label><br>
+                <input type="checkbox" name="v22" id="v22" {% if get.v22 %}checked{% endif %}>
+                <label for="v22">v22general</label><br>
+                <input type="checkbox" name="v23" id="v23" {% if get.v23 %}checked{% endif %}>
+                <label for="v23">v23town</label><br>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="submit" value="Filter">
+                <a href="{% url 'voters' %}">Clear Filters</a>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div class="container">
+ 
+    <!-- navigation links for different pages of results -->
+    <div class="row">
+        {% if is_paginated %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</li>
+
+                {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </div>
+    
+	<!-- table of results -->
+    <div class="row">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>DOB</th>
+                <th>Party</th>
+                <th>Score</th>
+            </tr>
+    
+            {% for r in results %}
+            <tr>
+                <td><a href="{% url 'voter' r.pk %}">{{ r.first_name }} {{ r.last_name }}</a></td>
+                <td>{{ r.street_num }} {{ r.street_name }}, {{ r.zip }}</td>
+                <td>{{ r.dob }}</td>
+                <td>{{ r.party }}</td>
+                <td>{{ r.voter_score }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No voters found.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+ 
+ 
+</div>    
+{% endblock %}

@@ -1,0 +1,104 @@
+<!-- voter_analytics/templates/voter_analytics/graphs.html -->
+<!-- Yash Kedia (yashkedi@bu.edu), 3/19/26 -->
+<!-- Description: template for graphs page of voter_analytics application -->
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+<h1>Voter Analytics Dashboard</h1>
+
+<form action="{% url 'graphs' %}" method="GET">
+    <table>
+        <!-- party info -->
+        <tr>
+            <th>Party affiliation:</th>
+            <td>
+                <select name="party">
+                    <option value="">--Any--</option>
+                    {% for p in parties %}
+                    <option value="{{ p }}" {% if get.party == p %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- min dob -->
+        <tr>
+            <th>Min Birth Year:</th>
+            <td>
+                <select name="min_dob">
+                    <option value="">-- Any --</option>
+                    {% for y in years %}
+                    <option value="{{ y }}" {% if get.min_dob == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- max dob -->
+        <tr>
+            <th>Max Birth Year:</th>
+            <td>
+                <select name="max_dob">
+                    <option value="">-- Any --</option>
+                    {% for y in years %}
+                    <option value="{{ y }}" {% if get.max_dob == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- voter score -->
+        <tr>
+            <th>Voter Score:</th>
+            <td>
+                <select name="voter_score">
+                    <option value="">--Any--</option>
+                    {% for s in scores %}
+                    <option value="{{ s }}" {% if get.voter_score == s|stringformat:"s" %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+
+        <!-- voted info -->
+        <tr>
+            <th>Voted in elections:</th>
+            <td>
+                <input type="checkbox" name="v20" id="v20" {% if get.v20 %}checked{% endif %}>
+                <label for="v20">v20state</label><br>
+                <input type="checkbox" name="v21town" id="v21town" {% if get.v21town %}checked{% endif %}>
+                <label for="v21town">v21town</label><br>
+                <input type="checkbox" name="v21primary" id="v21primary" {% if get.v21primary %}checked{% endif %}>
+                <label for="v21primary">v21primary</label><br>
+                <input type="checkbox" name="v22" id="v22" {% if get.v22 %}checked{% endif %}>
+                <label for="v22">v22general</label><br>
+                <input type="checkbox" name="v23" id="v23" {% if get.v23 %}checked{% endif %}>
+                <label for="v23">v23town</label><br>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Filter">
+                <a href="{% url 'graphs' %}">Clear Filters</a>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div class="container mt-4">
+    <div class="mt-4">
+        <h4>1. Distribution of Voters by Year of Birth</h4>
+        {{ graph_birth|safe }}
+    </div>
+    <div class="mt-4">
+        <h4>2. Distribution of Voters by Party Affiliation</h4>
+        {{ graph_party|safe }}
+    </div>
+    <div class="mt-4">
+        <h4>3. Voter Participation Across Elections</h4>
+        {{ graph_participation|safe }}
+    </div>
+</div>
+
+{% endblock %}
