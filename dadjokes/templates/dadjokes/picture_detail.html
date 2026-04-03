@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>Picture</title></head>
+<body>
+  <h1>Picture #{{ picture.pk }}</h1>
+  <img src="{{ picture.image_url }}" style="max-width:400px;">
+  <p><em>— {{ picture.contributor }}</em></p>
+  <p><small>{{ picture.created_at }}</small></p>
+  <a href="../pictures">All Pictures</a>
+</body>
+</html>

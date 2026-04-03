@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><title>All Jokes</title></head>
+<body>
+  <h1>All Jokes</h1>
+  <a href="">Home</a>
+  <hr>
+  {% for joke in jokes %}
+    <p><a href="../joke/{{ joke.pk }}">{{ joke.text }}</a> — <em>{{ joke.contributor }}</em></p>
+  {% endfor %}
+</body>
+</html>

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>Joke</title></head>
+<body>
+  <h1>Joke #{{ joke.pk }}</h1>
+  <p>{{ joke.text }}</p>
+  <p><em>— {{ joke.contributor }}</em></p>
+  <p><small>{{ joke.created_at }}</small></p>
+  <a href="../jokes">All Jokes</a>
+</body>
+</html>
