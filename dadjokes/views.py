@@ -41,16 +41,18 @@ class RandomJokeAPIView(APIView):
         return Response(serializer.data)
 
 class JokeListAPIView(generics.ListCreateAPIView):
-    queryset = Joke.objects.all()
+    queryset = Joke.objects.order_by('id')
     serializer_class = JokeSerializer
+    pagination_class = None
 
 class JokeDetailAPIView(generics.RetrieveAPIView):
     queryset = Joke.objects.all()
     serializer_class = JokeSerializer
 
 class PictureListAPIView(generics.ListAPIView):
-    queryset = Picture.objects.all()
+    queryset = Picture.objects.order_by('id')
     serializer_class = PictureSerializer
+    pagination_class = None
 
 class PictureDetailAPIView(generics.RetrieveAPIView):
     queryset = Picture.objects.all()
