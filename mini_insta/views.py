@@ -448,6 +448,10 @@ class CreatePostAPIView(APIView):
         profile = get_object_or_404(Profile, pk=pk)
         serializer = PostCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(profile=profile)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            post = serializer.save(profile=profile)
+            # If an image_url was provided, create a linked Photo object
+            image_url = serializer.validated_data.get('image_url', '')
+            if image_url:
+                Photo.objects.create(post=post, image_url=image_url)
+            return Response(PostSerializer(post, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

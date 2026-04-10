@@ -49,12 +49,14 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
-    '''Serializer for creating a new Post. Only exposes the caption field;
-    the profile is set in the view from the URL kwargs.'''
+    '''Serializer for creating a new Post. It is read here and used to create
+    a linked Photo object in the view after the post is saved.'''
+
+    image_url = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Post
-        fields = ['caption']
+        fields = ['caption', 'image_url']
 
 
 class ProfileSerializer(serializers.ModelSerializer):
