@@ -3,13 +3,21 @@
 # Author: Yash Kedia (yashkedi@bu.edu), 2/12/26
 # Description: Views for mini_insta application
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import *
 from mini_insta.forms import *
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+from .serializers import ProfileSerializer, PostSerializer, PostCreateSerializer
 # Create your views here.
 
 class ProfileListView(ListView):
@@ -354,3 +362,92 @@ class LikeDeleteView(LoginRequiredMixin, DeleteView):
         if like:
             like.delete()
         return redirect("show_post", pk=post.pk)
+
+
+class LoginAPIView(APIView):
+    '''POST /api/login/ — authenticate with username+password, return token + profile_id.
+    Open to unauthenticated users so the login screen can reach it.'''
+
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        user = authenticate(
+            request,
+            username=request.data.get('username'),
+            password=request.data.get('password'),
+        )
+        if user:
+            token, _ = Token.objects.get_or_create(user=user)
+            profile = Profile.objects.filter(user=user).first()
+            return Response({
+                'token': token.key,
+                'user': {'id': user.id, 'username': user.username},
+                'profile_id': profile.id if profile else None,
+            })
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class ProfileListAPIView(APIView):
+    '''GET /api/profiles/ — list all profiles (read-only for unauthenticated).'''
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+        return Response(serializer.data)
+
+
+class ProfileDetailAPIView(APIView):
+    '''GET /api/profiles/<pk>/ — single profile detail.'''
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, pk):
+        profile = get_object_or_404(Profile, pk=pk)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
+
+class ProfilePostsAPIView(APIView):
+    '''GET /api/profiles/<pk>/posts/ — all posts + photos for a profile. Requires auth.'''
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        profile = get_object_or_404(Profile, pk=pk)
+        posts = profile.get_all_posts()
+        serializer = PostSerializer(posts, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class ProfileFeedAPIView(APIView):
+    '''GET /api/profiles/<pk>/feed/ — feed of posts from followed profiles. Requires auth.'''
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        profile = get_object_or_404(Profile, pk=pk)
+        posts = profile.get_post_feed()
+        serializer = PostSerializer(posts, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class CreatePostAPIView(APIView):
+    '''POST /api/profiles/<pk>/create_post/ — create a new post. Requires auth.'''
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        profile = get_object_or_404(Profile, pk=pk)
+        serializer = PostCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(profile=profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
