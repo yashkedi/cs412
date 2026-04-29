@@ -143,8 +143,6 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL= "media/"  # note: no leading slash!
 
-LOGIN_REDIRECT_URL = '/project/'
-LOGOUT_REDIRECT_URL = '/project/'
 
 import socket
 CS_DEPLOYMENT_HOSTNAME = 'cs-webapps.bu.edu'
