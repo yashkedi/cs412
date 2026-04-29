@@ -1,0 +1,52 @@
+<!-- File: project/templates/project/strategy_list.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Lists all strategies for a given investor -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{{ investor.username }}'s Strategies{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Strategies for {{ investor.first_name }} {{ investor.last_name }}</h1>
+    <div class="action-row">
+        <a href="{% url 'investor_dashboard' investor.pk %}" class="btn btn-secondary">&larr; Dashboard</a>
+        <a href="{% url 'create_strategy' investor.pk %}" class="btn btn-primary">+ New Strategy</a>
+    </div>
+</div>
+
+<div class="card">
+    {% if strategies %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Indicator</th>
+                <th>Param 1</th>
+                <th>Param 2</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for strategy in strategies %}
+            <tr>
+                <td><a href="{% url 'strategy_detail' strategy.pk %}"><strong>{{ strategy.name }}</strong></a></td>
+                <td><span class="tag">{{ strategy.get_indicator_display }}</span></td>
+                <td>{{ strategy.parameter_1 }}</td>
+                <td>{% if strategy.parameter_2 %}{{ strategy.parameter_2 }}{% else %}N/A{% endif %}</td>
+                <td>{{ strategy.created_date|date:"M d, Y" }}</td>
+                <td>
+                    <a href="{% url 'run_backtest' strategy.pk %}" class="btn btn-success">Backtest</a>
+                    <a href="{% url 'update_strategy' strategy.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'delete_strategy' strategy.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No strategies yet. <a href="{% url 'create_strategy' investor.pk %}">Create one!</a></p>
+    {% endif %}
+</div>
+{% endblock %}

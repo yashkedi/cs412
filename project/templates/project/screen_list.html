@@ -1,0 +1,54 @@
+<!-- File: project/templates/project/screen_list.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Lists all screens for a given investor -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{{ investor.username }}'s Screens{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Stock Screens for {{ investor.first_name }} {{ investor.last_name }}</h1>
+    <div class="action-row">
+        <a href="{% url 'investor_dashboard' investor.pk %}" class="btn btn-secondary">&larr; Dashboard</a>
+        <a href="{% url 'create_screen' investor.pk %}" class="btn btn-primary">+ New Screen</a>
+    </div>
+</div>
+
+<div class="card">
+    {% if screens %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Sector Filter</th>
+                <th>Min Market Cap</th>
+                <th>Max P/E</th>
+                <th>Min Div Yield</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for screen in screens %}
+            <tr>
+                <td><strong>{{ screen.name }}</strong></td>
+                <td>{% if screen.sector_filter %}{{ screen.sector_filter }}{% else %}Any{% endif %}</td>
+                <td>{% if screen.min_market_cap %}${{ screen.min_market_cap|floatformat:0 }}B{% else %}N/A{% endif %}</td>
+                <td>{% if screen.max_pe_ratio %}{{ screen.max_pe_ratio|floatformat:1 }}{% else %}N/A{% endif %}</td>
+                <td>{% if screen.min_dividend_yield %}{{ screen.min_dividend_yield|floatformat:2 }}%{% else %}N/A{% endif %}</td>
+                <td>{{ screen.created_date|date:"M d, Y" }}</td>
+                <td>
+                    <a href="{% url 'run_screener' screen.pk %}" class="btn btn-success">Run</a>
+                    <a href="{% url 'update_screen' screen.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'delete_screen' screen.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No screens yet. <a href="{% url 'create_screen' investor.pk %}">Create one!</a></p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<!-- File: project/templates/project/login.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Login page for the Stock Screener and Backtesting Platform -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}Login | Stock Screener{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 400px; margin: 40px auto;">
+    <h1>Login</h1>
+    <form method="POST" action="{% url 'project_login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+{% endblock %}

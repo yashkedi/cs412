@@ -4,9 +4,10 @@
 
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class Stock(models.Model):
-    '''Encapsulate the data of a single stock in the universe.'''
+    """Encapsulate the data of a single stock in the universe."""
 
     ticker = models.CharField(max_length=10, unique=True)
     company_name = models.CharField(max_length=200)
@@ -20,17 +21,18 @@ class Stock(models.Model):
     image = models.ImageField(blank=True)
 
     def __str__(self):
-        '''Return a string representation of this Stock.'''
+        """Return a string representation of this Stock."""
         return f'{self.ticker}: {self.company_name}'
 
     def get_absolute_url(self):
-        '''Return the URL to display this Stock's detail page.'''
+        """Return the URL to display this Stock's detail page."""
         return reverse('stock_detail', kwargs={'ticker': self.ticker})
 
 
 class Investor(models.Model):
-    '''Encapsulate the data of an Investor on the platform.'''
+    """Encapsulate the data of an Investor on the platform."""
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) #fk
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
@@ -38,19 +40,23 @@ class Investor(models.Model):
     date_joined = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        '''Return a string representation of this Investor.'''
+        """Return a string representation of this Investor."""
         return f'{self.username}: {self.first_name} {self.last_name}'
 
     def get_strategies(self):
-        '''Return all strategies belonging to this investor.'''
+        """Return all strategies belonging to this investor."""
         return Strategy.objects.filter(investor=self)
 
     def get_screens(self):
-        '''Return all screens belonging to this investor.'''
+        """Return all screens belonging to this investor."""
         return Screen.objects.filter(investor=self)
 
+    def get_backtests(self):
+        """Return all backtest results across all strategies belonging to this investor."""
+        return BacktestResult.objects.filter(strategy__investor=self).order_by('-ran_on')
+
     def get_absolute_url(self):
-        '''Return the URL to display this Investor's dashboard.'''
+        """Return the URL to display this Investor's dashboard."""
         return reverse('investor_dashboard', kwargs={'pk': self.pk})
 
 
@@ -62,7 +68,7 @@ INDICATOR_CHOICES = [
 ]
 
 class Screen(models.Model):
-    '''Encapsulate the data of a stock screening filter set owned by an investor.'''
+    """Encapsulate the data of a stock screening filter set owned by an investor."""
 
     investor = models.ForeignKey(Investor, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
@@ -73,11 +79,11 @@ class Screen(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        '''Return a string representation of this Screen.'''
+        """Return a string representation of this Screen."""
         return f'{self.name} ({self.investor.username})'
 
     def run(self):
-        '''Apply this screen's filters to the Stock universe and return matching stocks.'''
+        """Apply this screen's filters to the Stock universe and return matching stocks."""
         results = Stock.objects.all()
         if self.sector_filter:
             results = results.filter(sector=self.sector_filter)
@@ -90,12 +96,12 @@ class Screen(models.Model):
         return results
 
     def get_absolute_url(self):
-        '''Return the URL to run this screen.'''
+        """Return the URL to run this screen."""
         return reverse('run_screener', kwargs={'pk': self.pk})
 
 
 class Strategy(models.Model):
-    '''Encapsulate the data of a trading strategy owned by an investor.'''
+    """Encapsulate the data of a trading strategy owned by an investor."""
 
     investor = models.ForeignKey(Investor, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
@@ -106,20 +112,20 @@ class Strategy(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        '''Return a string representation of this Strategy.'''
+        """Return a string representation of this Strategy."""
         return f'{self.name} ({self.get_indicator_display()})'
 
     def get_backtests(self):
-        '''Return all backtest results for this strategy, newest first.'''
+        """Return all backtest results for this strategy, newest first."""
         return BacktestResult.objects.filter(strategy=self).order_by('-ran_on')
 
     def get_absolute_url(self):
-        '''Return the URL to display this Strategy's detail page.'''
+        """Return the URL to display this Strategy's detail page."""
         return reverse('strategy_detail', kwargs={'pk': self.pk})
 
 
 class BacktestResult(models.Model):
-    '''Encapsulate the performance metrics from running a strategy against a stock.'''
+    """Encapsulate the performance metrics from running a strategy against a stock."""
 
     strategy = models.ForeignKey(Strategy, on_delete=models.CASCADE)
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
@@ -132,9 +138,9 @@ class BacktestResult(models.Model):
     ran_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        '''Return a string representation of this BacktestResult.'''
+        """Return a string representation of this BacktestResult."""
         return f'{self.strategy.name} on {self.stock.ticker} ({self.start_date} to {self.end_date})'
 
     def get_absolute_url(self):
-        '''Return the URL to display this BacktestResult's detail page.'''
+        """Return the URL to display this BacktestResult's detail page."""
         return reverse('backtest_result', kwargs={'pk': self.pk})

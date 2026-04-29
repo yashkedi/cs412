@@ -1,10 +1,13 @@
-username: cr7
+username: cathie_wood
 password: QWERTY@987654
 
-username: vk18
+username: ray_dalio
 password: QWERTY@987654
 
-username: chris_rock
+username: peter_lynch
+password: QWERTY@987654
+
+username: warren_buffett
 password: QWERTY@987654
 
 username: yash_kedia

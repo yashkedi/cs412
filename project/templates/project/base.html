@@ -1,0 +1,42 @@
+<!-- File: project/templates/project/base.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Base template for the Stock Screener and Backtesting Platform -->
+
+{% load static %}
+<html>
+<head>
+    <title>{% block title %}Stock Screener{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'project.css' %}">
+</head>
+<body>
+
+<nav id="navbar">
+    <a class="brand" href="{% url 'project_home' %}">Stock Screener</a>
+    <a href="{% url 'project_home' %}">Home</a>
+    <a href="{% url 'stock_list' %}">Stocks</a>
+{% if user.is_authenticated %}
+        {% with investor=user.investor_set.first %}
+        {% if investor %}
+        <a href="{% url 'investor_dashboard' investor.pk %}">My Dashboard</a>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="{% url 'project_logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-logout-btn">Logout</button>
+        </form>
+    {% else %}
+        <a href="{% url 'project_login' %}">Login</a>
+    {% endif %}
+</nav>
+
+<div id="content-container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer>
+    <p>Quantitative Stock Screener &amp; Backtesting Platform | CS412 Final Project | Yash Kedia</p>
+</footer>
+
+</body>
+</html>

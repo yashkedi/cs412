@@ -1,0 +1,53 @@
+<!-- File: project/templates/project/backtest_form.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Form to configure and launch a backtest for a strategy -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}Run Backtest: {{ strategy.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Run Backtest</h1>
+    <p><strong>Strategy:</strong> {{ strategy.name }}</p>
+    <p><strong>Indicator:</strong> {{ strategy.get_indicator_display }}</p>
+    <p><strong>Parameter 1:</strong> {{ strategy.parameter_1 }}
+    {% if strategy.parameter_2 %} &nbsp;|&nbsp; <strong>Parameter 2:</strong> {{ strategy.parameter_2 }}{% endif %}</p>
+</div>
+
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<div class="card">
+    <h2>Configure Backtest</h2>
+    <p style="margin-bottom:16px;">
+        Price data is fetched live from Yahoo Finance. Choose a stock and date range of at least one year for meaningful results.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="ticker">Stock</label>
+            <select name="ticker" id="ticker" required>
+                <option value="">-- Select a stock --</option>
+                {% for stock in stocks %}
+                <option value="{{ stock.ticker }}">{{ stock.ticker }} | {{ stock.company_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="start_date">Start Date</label>
+            <input type="date" name="start_date" id="start_date" required>
+        </div>
+        <div>
+            <label for="end_date">End Date</label>
+            <input type="date" name="end_date" id="end_date" required>
+        </div>
+        <div class="action-row">
+            <button type="submit" class="btn btn-success">Run Backtest</button>
+            <a href="{% url 'strategy_detail' strategy.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+<!-- File: project/templates/project/backtest_result.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Displays performance metrics from a completed backtest -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}Backtest: {{ result.strategy.name }} on {{ result.stock.ticker }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Backtest Results</h1>
+    <p>
+        <strong>Strategy:</strong> <a href="{% url 'strategy_detail' result.strategy.pk %}">{{ result.strategy.name }}</a>
+        |
+        <strong>Stock:</strong> <a href="{% url 'stock_detail' result.stock.ticker %}">{{ result.stock.ticker }} ({{ result.stock.company_name }})</a>
+    </p>
+    <p><strong>Period:</strong> {{ result.start_date }} to {{ result.end_date }}</p>
+    <p><strong>Ran on:</strong> {{ result.ran_on|date:"M d, Y H:i" }}</p>
+</div>
+
+{% if graph_equity %}
+<div class="card">
+    <h2>Equity Curve</h2>
+    {{ graph_equity|safe }}
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Performance Summary</h2>
+    <div class="metric-grid">
+        <div class="metric-box {% if result.total_return >= 0 %}positive{% else %}negative{% endif %}">
+            <div class="metric-label">Total Return</div>
+            <div class="metric-value">{{ result.total_return|floatformat:2 }}%</div>
+        </div>
+        <div class="metric-box negative">
+            <div class="metric-label">Max Drawdown</div>
+            <div class="metric-value">{{ result.max_drawdown|floatformat:2 }}%</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">Win Rate</div>
+            <div class="metric-value">{{ result.win_rate|floatformat:1 }}%</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">Trades</div>
+            <div class="metric-value">{{ result.num_trades }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Strategy Details</h2>
+    <table style="width:auto;">
+        <tbody>
+            <tr><td><strong>Indicator</strong></td><td>{{ result.strategy.get_indicator_display }}</td></tr>
+            <tr><td><strong>Parameter 1</strong></td><td>{{ result.strategy.parameter_1 }}</td></tr>
+            <tr>
+                <td><strong>Parameter 2</strong></td>
+                <td>{% if result.strategy.parameter_2 %}{{ result.strategy.parameter_2 }}{% else %}N/A{% endif %}</td>
+            </tr>
+            <tr><td><strong>Stock Sector</strong></td><td>{{ result.stock.sector }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="action-row">
+    <a href="{% url 'run_backtest' result.strategy.pk %}" class="btn btn-success">Run Again</a>
+    <a href="{% url 'strategy_detail' result.strategy.pk %}" class="btn btn-secondary">&larr; Strategy Details</a>
+</div>
+{% endblock %}

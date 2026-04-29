@@ -1,0 +1,50 @@
+<!-- File: project/templates/project/home.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Landing page for the Stock Screener and Backtesting Platform -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}Home | Quantitative Stock Screener{% endblock %}
+
+{% block content %}
+<div class="card hero">
+    <h1>Quantitative Stock Screener &amp; Backtesting Platform</h1>
+    <p>Screen stocks by fundamentals, build trading strategies, and backtest them against real historical data from Yahoo Finance.</p>
+    {% if not user.is_authenticated %}
+    <div class="action-row">
+        <a href="{% url 'project_login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'stock_list' %}" class="btn btn-success">Browse Stocks</a>
+    </div>
+    {% else %}
+    <div class="action-row">
+        {% with investor=user.investor_set.first %}
+        {% if investor %}
+        <a href="{% url 'investor_dashboard' investor.pk %}" class="btn btn-primary">My Dashboard</a>
+        {% endif %}
+        {% endwith %}
+        <a href="{% url 'stock_list' %}" class="btn btn-success">Browse Stocks</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>What You Can Do</h2>
+    <div class="feature-grid">
+        <div>
+            <h3>Screen Stocks</h3>
+            <p>Filter the stock universe by sector, market cap, P/E ratio, and dividend yield to find candidates that match your investment criteria.</p>
+            <a href="{% url 'stock_list' %}" class="btn btn-primary">View Stocks</a>
+        </div>
+        <div>
+            <h3>Build Strategies</h3>
+            <p>Create quantitative trading strategies using SMA Crossover, RSI, or Momentum indicators with your own parameters.</p>
+            <a href="{% url 'investor_list' %}" class="btn btn-primary">View Investors</a>
+        </div>
+        <div>
+            <h3>Run Backtests</h3>
+            <p>Test your strategies against real historical price data fetched live from Yahoo Finance and view performance metrics.</p>
+            <a href="{% url 'stock_list' %}" class="btn btn-primary">Get Started</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

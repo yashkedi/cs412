@@ -1,0 +1,43 @@
+<!-- File: project/templates/project/investor_list.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Lists all investors on the platform -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}Investors | Stock Screener{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Investors</h1>
+    <p>{{ investors|length }} investors on the platform.</p>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Member Since</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for investor in investors %}
+            <tr>
+                <td><strong>{{ investor.username }}</strong></td>
+                <td>{{ investor.first_name }} {{ investor.last_name }}</td>
+                <td>{{ investor.email }}</td>
+                <td>{{ investor.date_joined }}</td>
+                <td>
+                    <a href="{% url 'investor_dashboard' investor.pk %}" class="btn btn-primary">Dashboard</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No investors yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

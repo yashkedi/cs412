@@ -1,0 +1,51 @@
+<!-- File: project/templates/project/investor_backtests.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Shows all backtest results for a given investor -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{{ investor.username }}'s Backtests{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ investor.first_name }} {{ investor.last_name }}'s Backtest History</h1>
+    <a href="{% url 'investor_dashboard' investor.pk %}" class="btn btn-warning">&larr; Dashboard</a>
+</div>
+
+<div class="card">
+    {% if backtests %}
+    <table>
+        <thead>
+            <tr>
+                <th>Strategy</th>
+                <th>Stock</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Total Return</th>
+                <th>Max Drawdown</th>
+                <th>Win Rate</th>
+                <th>Trades</th>
+                <th>Run On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bt in backtests %}
+            <tr>
+                <td><a href="{% url 'backtest_result' bt.pk %}">{{ bt.strategy.name }}</a></td>
+                <td><a href="{% url 'stock_detail' bt.stock.ticker %}">{{ bt.stock.ticker }}</a></td>
+                <td>{{ bt.start_date }}</td>
+                <td>{{ bt.end_date }}</td>
+                <td class="{% if bt.total_return >= 0 %}positive{% else %}negative{% endif %}">{{ bt.total_return|floatformat:2 }}%</td>
+                <td class="negative">{{ bt.max_drawdown|floatformat:2 }}%</td>
+                <td>{{ bt.win_rate|floatformat:1 }}%</td>
+                <td>{{ bt.num_trades }}</td>
+                <td>{{ bt.ran_on|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No backtests run yet. Go to a strategy and click "Backtest" to get started.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!-- File: project/templates/project/screen_form.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Form for creating and updating a stock Screen -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}New{% endif %} Screen{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{% if object %}Edit Screen{% else %}Create New Screen{% endif %}</h1>
+    <p><strong>Investor:</strong> {{ investor.first_name }} {{ investor.last_name }}</p>
+</div>
+
+<div class="card">
+    <h2>Filter Criteria</h2>
+    <p style="margin-bottom:16px;">Leave any field blank to skip that filter. All matching stocks will be returned.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <p style="color:#e53e3e; font-size:0.85rem;">{{ field.errors.as_text }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="action-row">
+            <button type="submit" class="btn btn-primary">{% if object %}Save Changes{% else %}Create &amp; Run Screen{% endif %}</button>
+            <a href="{% url 'investor_dashboard' investor.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

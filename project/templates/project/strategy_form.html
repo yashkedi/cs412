@@ -1,0 +1,40 @@
+<!-- File: project/templates/project/strategy_form.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Form for creating and updating a trading Strategy -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}New{% endif %} Strategy{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{% if object %}Edit Strategy{% else %}Create New Strategy{% endif %}</h1>
+    <p><strong>Investor:</strong> {{ investor.first_name }} {{ investor.last_name }}</p>
+</div>
+
+<div class="card">
+    <h2>Strategy Parameters</h2>
+    <p style="margin-bottom:16px;">
+        <strong>SMA Crossover:</strong> Param 1 = short window (e.g. 50), Param 2 = long window (e.g. 200).<br>
+        <strong>RSI:</strong> Param 1 = RSI period (e.g. 14), Param 2 = leave blank.<br>
+        <strong>Momentum:</strong> Param 1 = lookback days (e.g. 20), Param 2 = leave blank.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <p style="color:#e53e3e; font-size:0.85rem;">{{ field.errors.as_text }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="action-row">
+            <button type="submit" class="btn btn-primary">{% if object %}Save Changes{% else %}Create Strategy{% endif %}</button>
+            <a href="{% url 'investor_dashboard' investor.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

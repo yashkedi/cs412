@@ -1,0 +1,58 @@
+<!-- File: project/templates/project/stock_detail.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Displays detailed information for a single stock -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{{ stock.ticker }} | {{ stock.company_name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display:flex; align-items:center; gap:20px;">
+        {% if stock.image %}
+        <img src="{{ stock.image.url }}" class="stock-logo" alt="{{ stock.ticker }} logo">
+        {% endif %}
+        <div>
+            <h1>{{ stock.ticker }} | {{ stock.company_name }}</h1>
+            <span class="tag">{{ stock.sector }}</span>
+            <span class="tag">{{ stock.exchange }}</span>
+        </div>
+    </div>
+
+    {% if stock.description %}
+    <p style="margin-top:16px;">{{ stock.description }}</p>
+    {% endif %}
+</div>
+
+{% if graph_price %}
+<div class="card">
+    {{ graph_price|safe }}
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Fundamental Metrics</h2>
+    <div class="metric-grid">
+        <div class="metric-box">
+            <div class="metric-label">Market Cap</div>
+            <div class="metric-value">${{ stock.market_cap|floatformat:0 }}B</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">P/E Ratio</div>
+            <div class="metric-value">{% if stock.pe_ratio %}{{ stock.pe_ratio|floatformat:1 }}{% else %}N/A{% endif %}</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">Dividend Yield</div>
+            <div class="metric-value">{% if stock.dividend_yield %}{{ stock.dividend_yield|floatformat:2 }}%{% else %}N/A{% endif %}</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">Beta</div>
+            <div class="metric-value">{% if stock.beta %}{{ stock.beta|floatformat:2 }}{% else %}N/A{% endif %}</div>
+        </div>
+    </div>
+</div>
+
+<div class="action-row">
+    <a href="{% url 'stock_list' %}" class="btn btn-secondary">&larr; Back to Stocks</a>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!-- File: project/templates/project/strategy_detail.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Displays details of a strategy and its past backtest results -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{{ strategy.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ strategy.name }}</h1>
+    <span class="tag">{{ strategy.get_indicator_display }}</span>
+    <p style="margin-top:12px;">{{ strategy.description }}</p>
+
+    <table style="margin-top:16px; width:auto;">
+        <tbody>
+            <tr>
+                <td><strong>Indicator</strong></td>
+                <td>{{ strategy.get_indicator_display }}</td>
+            </tr>
+            <tr>
+                <td><strong>Parameter 1</strong></td>
+                <td>{{ strategy.parameter_1 }}</td>
+            </tr>
+            <tr>
+                <td><strong>Parameter 2</strong></td>
+                <td>{% if strategy.parameter_2 %}{{ strategy.parameter_2 }}{% else %}N/A{% endif %}</td>
+            </tr>
+            <tr>
+                <td><strong>Owner</strong></td>
+                <td><a href="{% url 'investor_dashboard' strategy.investor.pk %}">{{ strategy.investor.username }}</a></td>
+            </tr>
+            <tr>
+                <td><strong>Created</strong></td>
+                <td>{{ strategy.created_date|date:"M d, Y H:i" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="action-row">
+        <a href="{% url 'run_backtest' strategy.pk %}" class="btn btn-success">Run Backtest</a>
+        <a href="{% url 'update_strategy' strategy.pk %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'delete_strategy' strategy.pk %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'strategy_list' strategy.investor.pk %}" class="btn btn-secondary">&larr; All Strategies</a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Past Backtest Results</h2>
+    {% if backtests %}
+    <table>
+        <thead>
+            <tr>
+                <th>Stock</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Total Return</th>
+                <th>Max Drawdown</th>
+                <th>Win Rate</th>
+                <th>Trades</th>
+                <th>Ran On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bt in backtests %}
+            <tr>
+                <td><a href="{% url 'stock_detail' bt.stock.ticker %}">{{ bt.stock.ticker }}</a></td>
+                <td>{{ bt.start_date }}</td>
+                <td>{{ bt.end_date }}</td>
+                <td style="color:{% if bt.total_return >= 0 %}#38a169{% else %}#e53e3e{% endif %}; font-weight:600;">
+                    {{ bt.total_return|floatformat:2 }}%
+                </td>
+                <td style="color:#e53e3e;">{{ bt.max_drawdown|floatformat:2 }}%</td>
+                <td>{{ bt.win_rate|floatformat:1 }}%</td>
+                <td>{{ bt.num_trades }}</td>
+                <td>{{ bt.ran_on|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No backtests run yet. <a href="{% url 'run_backtest' strategy.pk %}">Run one now!</a></p>
+    {% endif %}
+</div>
+{% endblock %}

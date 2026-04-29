@@ -1,0 +1,139 @@
+<!-- File: project/templates/project/investor_dashboard.html -->
+<!-- Author: Yash Kedia (yashkedi@bu.edu), 4/18/26 -->
+<!-- Description: Investor dashboard showing strategies and screens -->
+
+{% extends 'project/base.html' %}
+
+{% block title %}{{ investor.username }}'s Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ investor.first_name }} {{ investor.last_name }}'s Dashboard</h1>
+    <p><strong>Username:</strong> {{ investor.username }}</p>
+    <p><strong>Email:</strong> {{ investor.email }}</p>
+    <p><strong>Member since:</strong> {{ investor.date_joined }}</p>
+</div>
+
+{% if graph_returns %}
+<div class="card">
+    <h2>Performance Overview</h2>
+    {{ graph_returns|safe }}
+</div>
+{% endif %}
+
+<!-- Strategies section -->
+<div class="card">
+    <h2>Trading Strategies</h2>
+    {% if strategies %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Indicator</th>
+                <th>Param 1</th>
+                <th>Param 2</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for strategy in strategies %}
+            <tr>
+                <td><a href="{% url 'strategy_detail' strategy.pk %}">{{ strategy.name }}</a></td>
+                <td><span class="tag">{{ strategy.get_indicator_display }}</span></td>
+                <td>{{ strategy.parameter_1 }}</td>
+                <td>{% if strategy.parameter_2 %}{{ strategy.parameter_2 }}{% else %}N/A{% endif %}</td>
+                <td>{{ strategy.created_date|date:"M d, Y" }}</td>
+                <td>
+                    <a href="{% url 'run_backtest' strategy.pk %}" class="btn btn-success">Backtest</a>
+                    <a href="{% url 'update_strategy' strategy.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'delete_strategy' strategy.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No strategies yet.</p>
+    {% endif %}
+    <div class="action-row">
+        <a href="{% url 'create_strategy' investor.pk %}" class="btn btn-primary">+ New Strategy</a>
+    </div>
+</div>
+
+<!-- Recent Backtests section -->
+<div class="card">
+    <h2>Recent Backtests</h2>
+    {% if recent_backtests %}
+    <table>
+        <thead>
+            <tr>
+                <th>Strategy</th>
+                <th>Stock</th>
+                <th>Period</th>
+                <th>Return</th>
+                <th>Win Rate</th>
+                <th>Trades</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bt in recent_backtests %}
+            <tr>
+                <td><a href="{% url 'backtest_result' bt.pk %}">{{ bt.strategy.name }}</a></td>
+                <td>{{ bt.stock.ticker }}</td>
+                <td>{{ bt.start_date }} to {{ bt.end_date }}</td>
+                <td class="{% if bt.total_return >= 0 %}positive{% else %}negative{% endif %}">{{ bt.total_return|floatformat:2 }}%</td>
+                <td>{{ bt.win_rate|floatformat:1 }}%</td>
+                <td>{{ bt.num_trades }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="action-row">
+        <a href="{% url 'investor_backtests' investor.pk %}" class="btn btn-primary">View All Backtests</a>
+    </div>
+    {% else %}
+    <p>No backtests run yet.</p>
+    {% endif %}
+</div>
+
+<!-- Screens section -->
+<div class="card">
+    <h2>Stock Screens</h2>
+    {% if screens %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Sector</th>
+                <th>Min Market Cap</th>
+                <th>Max P/E</th>
+                <th>Min Div Yield</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for screen in screens %}
+            <tr>
+                <td>{{ screen.name }}</td>
+                <td>{% if screen.sector_filter %}{{ screen.sector_filter }}{% else %}Any{% endif %}</td>
+                <td>{% if screen.min_market_cap %}${{ screen.min_market_cap|floatformat:0 }}B{% else %}N/A{% endif %}</td>
+                <td>{% if screen.max_pe_ratio %}{{ screen.max_pe_ratio|floatformat:1 }}{% else %}N/A{% endif %}</td>
+                <td>{% if screen.min_dividend_yield %}{{ screen.min_dividend_yield|floatformat:2 }}%{% else %}N/A{% endif %}</td>
+                <td>
+                    <a href="{% url 'run_screener' screen.pk %}" class="btn btn-success">Run</a>
+                    <a href="{% url 'update_screen' screen.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'delete_screen' screen.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No screens yet.</p>
+    {% endif %}
+    <div class="action-row">
+        <a href="{% url 'create_screen' investor.pk %}" class="btn btn-primary">+ New Screen</a>
+    </div>
+</div>
+{% endblock %}
