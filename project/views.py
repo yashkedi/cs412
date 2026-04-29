@@ -175,8 +175,8 @@ class StockDetailView(DetailView):
                     hovermode='x unified',
                 )
                 context['graph_price'] = plotly.offline.plot(fig, auto_open=False, output_type='div')
-        except Exception:
-            pass
+        except Exception as e:
+            raise
         return context
 
 
