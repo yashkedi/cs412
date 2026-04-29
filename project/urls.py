@@ -10,7 +10,7 @@ urlpatterns = [
     # Home
     path('', HomeView.as_view(), name='project_home'),
     # Auth
-    path('login/', auth_views.LoginView.as_view(template_name='project/login.html'), name='project_login'),
+    path('login/', auth_views.LoginView.as_view(template_name='project/login.html', next_page='project_home'), name='project_login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='project_home'), name='project_logout'),
     # Investor URLs
     path('investors/', InvestorListView.as_view(), name='investor_list'),
