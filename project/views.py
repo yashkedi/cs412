@@ -13,6 +13,7 @@ import yfinance as yf
 import pandas as pd
 import plotly
 import plotly.graph_objects as go
+import sys
 
 def _run_backtest_engine(strategy, stock, start_date, end_date):
     """Fetch historical price data from Yahoo Finance and simulate the given strategy. Returns a metrics dict or None."""
@@ -155,7 +156,9 @@ class StockDetailView(DetailView):
         end = date.today()
         start = end - timedelta(days=365)
         try:
+            print(f'[CHART DEBUG] Downloading {self.object.ticker} from {start} to {end}', file=sys.stderr)
             df = yf.download(self.object.ticker, start=str(start), end=str(end), progress=False)
+            print(f'[CHART DEBUG] df.empty={df.empty} shape={df.shape}', file=sys.stderr)
             if not df.empty:
                 prices = df['Close'].squeeze()
                 dates = [str(d.date()) for d in prices.index]
@@ -175,8 +178,13 @@ class StockDetailView(DetailView):
                     hovermode='x unified',
                 )
                 context['graph_price'] = plotly.offline.plot(fig, auto_open=False, output_type='div')
+                print('[CHART DEBUG] graph_price built OK', file=sys.stderr)
+            else:
+                context['chart_debug'] = f'yfinance returned empty data for {self.object.ticker}'
+                print(f'[CHART DEBUG] empty df for {self.object.ticker}', file=sys.stderr)
         except Exception as e:
-            raise
+            context['chart_debug'] = f'Exception: {type(e).__name__}: {e}'
+            print(f'[CHART DEBUG] Exception: {type(e).__name__}: {e}', file=sys.stderr)
         return context
 
 
@@ -459,8 +467,12 @@ class BacktestResultDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         result = self.object
         try:
+            print(f'[BACKTEST DEBUG] Re-running engine for {result.stock.ticker}', file=sys.stderr)
             metrics = _run_backtest_engine(result.strategy, result.stock, result.start_date, result.end_date)
-        except Exception:
+            print(f'[BACKTEST DEBUG] metrics={metrics is not None}', file=sys.stderr)
+        except Exception as e:
+            print(f'[BACKTEST DEBUG] Exception: {type(e).__name__}: {e}', file=sys.stderr)
+            context['equity_debug'] = f'Exception: {type(e).__name__}: {e}'
             metrics = None
         if metrics:
             fig = go.Figure()

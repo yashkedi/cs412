@@ -28,6 +28,10 @@
 <div class="card">
     {{ graph_price|safe }}
 </div>
+{% elif chart_debug %}
+<div class="card" style="color:#e53e3e;">
+    <strong>Chart debug:</strong> {{ chart_debug }}
+</div>
 {% endif %}
 
 <div class="card">
